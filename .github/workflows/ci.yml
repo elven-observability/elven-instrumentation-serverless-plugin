@@ -1,0 +1,47 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22.x, 24.x, 26.x]
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node --check index.js
+      - run: npm test
+      - run: npm audit --omit=dev --registry=https://registry.npmjs.org
+      - run: npm pack --dry-run --ignore-scripts
+  packaging-v3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.x
+      - name: Install isolated historical Framework compatibility tool
+        run: npm install --prefix "$RUNNER_TEMP/framework" --ignore-scripts --no-fund --no-audit serverless@3.40.0
+      - name: Package local fixture with AWS/network requests prohibited
+        run: node integration/package.cjs
+        env:
+          ELVEN_SERVERLESS_MODULE: ${{ runner.temp }}/framework/node_modules/serverless
+          HOME: ${{ runner.temp }}/isolated-home
+          CI: 'true'
+          SLS_TELEMETRY_DISABLED: '1'
+          SERVERLESS_TELEMETRY_DISABLED: '1'
+          AWS_EC2_METADATA_DISABLED: 'true'

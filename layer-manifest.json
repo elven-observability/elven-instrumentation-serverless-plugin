@@ -1,0 +1,28 @@
+{
+  "verifiedOn": "2026-10-29",
+  "validation": "Pinned upstream release metadata; no AWS GetLayerVersion or customer runtime execution was performed",
+  "account": "184161586896",
+  "versions": {
+    "node": {
+      "name": "opentelemetry-nodejs-0_24_0", "version": "1", "upstream": "2.12.0",
+      "source": "https://github.com/open-telemetry/opentelemetry-lambda/releases/tag/layer-nodejs/0.24.0"
+    },
+    "python": {
+      "name": "opentelemetry-python-0_22_0", "version": "1", "upstream": "1.45.1/0.66b1",
+      "source": "https://github.com/open-telemetry/opentelemetry-lambda/releases/tag/layer-python/0.22.0"
+    },
+    "ruby": {
+      "name": "opentelemetry-ruby-0_16_0", "version": "1", "upstream": "1.13.1",
+      "runtimes": ["ruby3.3", "ruby3.4", "ruby4.0"], "excludedRegions": ["me-central-1"],
+      "source": "https://github.com/open-telemetry/opentelemetry-lambda/releases/tag/layer-ruby/0.16.0"
+    },
+    "javaagent": {
+      "name": "opentelemetry-javaagent-0_22_0", "version": "1", "upstream": "2.32.0",
+      "source": "https://github.com/open-telemetry/opentelemetry-lambda/releases/tag/layer-javaagent/0.22.0"
+    },
+    "javawrapper": {
+      "name": "opentelemetry-javawrapper-0_22_0", "version": "1", "upstream": "2.32.0",
+      "source": "https://github.com/open-telemetry/opentelemetry-lambda/releases/tag/layer-javaagent/0.22.0"
+    }
+  }
+}

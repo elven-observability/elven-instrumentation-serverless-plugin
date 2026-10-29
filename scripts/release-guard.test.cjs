@@ -1,0 +1,17 @@
+const assert = require('node:assert/strict');
+const { assertContext } = require('../scripts/release-guard.cjs');
+const pkg = require('../package.json');
+const repo = pkg.repository.url.replace('git+https://github.com/', '').replace('.git', '');
+const env = { GITHUB_REPOSITORY: repo, GITHUB_EVENT_NAME: 'workflow_dispatch', GITHUB_REF: 'refs/heads/main', RUNNER_ENVIRONMENT: 'github-hosted', GITHUB_WORKFLOW_REF: repo + '/.github/workflows/release.yml@refs/heads/main', EXPECTED_SHA: 'a'.repeat(40), GITHUB_SHA: 'a'.repeat(40), EXPECTED_VERSION: pkg.version, CONFIRM: 'publish ' + pkg.name + '@' + pkg.version };
+assert.equal(assertContext(env, pkg), repo);
+for (const change of [{ GITHUB_EVENT_NAME: 'push' }, { GITHUB_REF: 'refs/heads/other' }, { RUNNER_ENVIRONMENT: 'self-hosted' }, { EXPECTED_SHA: 'b'.repeat(40) }, { CONFIRM: 'publish' }, { GITHUB_REPOSITORY: 'other/repo' }, { GITHUB_WORKFLOW_REF: 'wrong' }]) assert.throws(() => assertContext({ ...env, ...change }, pkg));
+assert.throws(() => assertContext(env, { ...pkg, publishConfig: { ...pkg.publishConfig, provenance: false } }));
+assert.throws(() => assertContext(env, { ...pkg, repository: { url: 'wrong' } }));
+const yaml = require('node:fs').readFileSync(require('node:path').join(__dirname, '../.github/workflows/release.yml'), 'utf8');
+assert.match(yaml, /workflow_dispatch:/);
+assert.doesNotMatch(yaml, /\n  (push|pull_request|release|schedule|workflow_run):/);
+assert.equal((yaml.match(/NODE_AUTH_TOKEN:/g) || []).length, 1);
+assert.match(yaml, /npm publish \.\/release\/package\.tgz --ignore-scripts --provenance --access public/);
+assert.doesNotMatch(yaml, /npm publish release\/package\.tgz/);
+assert.doesNotMatch(yaml, /provenance[=: ]+false|self-hosted/);
+console.log('Release negative/positive policy checks passed; no publication attempted');

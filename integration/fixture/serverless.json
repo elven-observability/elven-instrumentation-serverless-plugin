@@ -1,0 +1,24 @@
+{
+  "service": "elven-local-packaging",
+  "configValidationMode": "error",
+  "provider": {
+    "name": "aws",
+    "runtime": "nodejs20.x",
+    "region": "us-east-1",
+    "stage": "qa",
+    "environment": { "BUSINESS_SETTING": "preserved" }
+  },
+  "custom": { "elvenLayerPlugin": { "collector_endpoint": "https://collector-b.example.test" } },
+  "functions": {
+    "api": { "handler": "handler.run" },
+    "worker": { "handler": "worker.run", "runtime": "python3.11", "architecture": "arm64" },
+    "disabled": { "handler": "handler.run", "disableElven": true },
+    "owned": {
+      "handler": "handler.run",
+      "environment": {
+        "OTEL_EXPORTER_OTLP_ENDPOINT": "https://collector-a.example.test",
+        "OTEL_EXPORTER_OTLP_HEADERS": "X-Test=synthetic-owner-marker"
+      }
+    }
+  }
+}

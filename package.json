@@ -1,0 +1,34 @@
+{
+  "name": "elven-instrumentation-serverless-plugin",
+  "version": "1.2.0",
+  "description": "Serverless Framework plugin to add Elven observability layers and environment variables automatically.",
+  "main": "index.js",
+  "files": ["index.js", "layer-manifest.json", "README.md"],
+  "scripts": {
+    "test": "node --test",
+    "prepublishOnly": "npm test && npm audit --omit=dev --registry=https://registry.npmjs.org"
+  },
+  "keywords": [
+    "serverless",
+    "opentelemetry",
+    "elven",
+    "plugin",
+    "aws-lambda",
+    "observability"
+  ],
+  "author": "Leonardo Zwirtes",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true,
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elven-observability/elven-instrumentation-serverless-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/elven-observability/elven-instrumentation-serverless-plugin/issues"
+  },
+  "homepage": "https://docs.elven.works/elven-observability/integracao-e-instrumentacao/javascript/instrumentacao-lambda-com-serverless-framework-e-elven-plugin.html"
+}
