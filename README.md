@@ -4,7 +4,7 @@ Guia prático para instrumentar funções AWS Lambda com o `elven-instrumentatio
 
 Fonte pública de releases: [elven-instrumentation-serverless-plugin](https://github.com/elven-observability/elven-instrumentation-serverless-plugin).
 Documentação central: [Elven Docs](https://docs.elven.works/elven-observability/integracao-e-instrumentacao/javascript/instrumentacao-lambda-com-serverless-framework-e-elven-plugin.html), mantida no [Git](https://github.com/elvenworks-ps/docs.elven.works).
-As mudanças abaixo correspondem à fonte 1.2.0. Confirme a versão no npm e na release antes da instalação; a existência deste repositório não comprova publicação.
+A versão [1.2.0 foi publicada no npm](https://www.npmjs.com/package/elven-instrumentation-serverless-plugin/v/1.2.0), com artefato e proveniência conferidos. A [release no Git](https://github.com/elven-observability/elven-instrumentation-serverless-plugin/releases/tag/v1.2.0) contém os recibos de integridade e assinatura. Isso não certifica a execução das layers remotas.
 
 Este espelho contém apenas os arquivos revisados da biblioteca e seus testes,
 sem o histórico do repositório privado. O código de transformação foi extraído
@@ -13,6 +13,7 @@ O empacotamento local foi qualificado com Serverless Framework 3.40.0, Node 20
 e Python 3.11 como runtimes declarados, sem chamadas AWS. O processo de build
 usou Node 26; ele não executou funções nesses runtimes. Framework 4.46.0,
 execução real das layers e disponibilidade regional exigem homologação própria.
+Os runtimes dos exemplos abaixo são configurações; não ampliam essa matriz de execução qualificada.
 
 ---
 
@@ -42,7 +43,7 @@ Uma seleção explícita incompatível faz o plugin avisar e ignorar a função,
 ## Instalação
 
 ```bash
-npm install --save-dev elven-instrumentation-serverless-plugin
+npm install --save-dev elven-instrumentation-serverless-plugin@1.2.0
 ```
 
 ```yaml
@@ -70,8 +71,6 @@ plugins:
 
 custom:
   elvenLayerPlugin:
-    tenant: "seu-tenant-id"
-    token: "seu-api-token"
     collector_endpoint: "https://otel-collector.minha-infra.com:4318"
     runtime: python
 
@@ -95,8 +94,6 @@ plugins:
 
 custom:
   elvenLayerPlugin:
-    tenant: "seu-tenant-id"
-    token: "seu-api-token"
     collector_endpoint: "https://otel-collector.minha-infra.com:4318"
 
 functions:
@@ -422,7 +419,7 @@ Execute `npm ci --ignore-scripts`, `npm test`, `npm audit --omit=dev` e `npm pac
 Verifique:
 
 1. `collector_endpoint`
-2. `tenant` e `token`
+2. a autenticação exigida pelo collector; `tenant`/`token` são opcionais no OTLP e devem ser avaliados no modo Loki explícito
 3. se a função recebeu a layer OTel correta para o runtime
 4. se `LOKI_URL` está configurado como URL base, sem `/loki/api/v1/push`
 
